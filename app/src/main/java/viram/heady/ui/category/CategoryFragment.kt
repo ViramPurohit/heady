@@ -101,7 +101,7 @@ class CategoryFragment : Fragment(),CategoryImpl.View{
     fun callFragment(item: Category) {
         val productFragment = ProductFragment()
         val bundle = Bundle()
-        bundle.putSerializable("product", item)
+        bundle.putSerializable("category", item)
         productFragment.setArguments(bundle)
         ActivityUtil().addFragmentToActivity(
                 fragmentManager,

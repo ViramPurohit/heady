@@ -14,6 +14,8 @@ import viram.heady.inject.component.DaggerProductComponent
 import viram.heady.inject.module.ProductModule
 import viram.heady.model.Category
 import viram.heady.model.Product
+import viram.heady.ui.productdetails.ProductDetails
+import viram.heady.util.ActivityUtil
 import javax.inject.Inject
 
 
@@ -41,7 +43,7 @@ class ProductFragment : Fragment(),ProductImpl.View {
 
         val bundle = this.arguments
         if (bundle != null) {
-            category = bundle.getSerializable("product") as Category
+            category = bundle.getSerializable("category") as Category
         }
     }
 
@@ -64,6 +66,7 @@ class ProductFragment : Fragment(),ProductImpl.View {
             mView!!.product_recyclerview.adapter = ProductListAdapter(context,category.products!!,
                     object  : ProductListAdapter.OnItemClickListener{
                         override fun onItemClick(item: Product) {
+                            callFragment(item)
                             Toast.makeText(activity," item "+item.name, Toast.LENGTH_SHORT).show()
                         }
                     })
@@ -87,4 +90,14 @@ class ProductFragment : Fragment(),ProductImpl.View {
         productComponent.inject(this)
     }
 
+    fun callFragment(product: Product) {
+        val productDetails = ProductDetails()
+        val bundle = Bundle()
+        bundle.putSerializable("product", product)
+        productDetails.setArguments(bundle)
+        ActivityUtil().addFragmentToActivity(
+                fragmentManager,
+                productDetails, R.id.frame, "productDetails")
+
+    }
 }// Required empty public constructor

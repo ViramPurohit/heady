@@ -2,8 +2,9 @@ package viram.heady.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
-class Product {
+class Product : Serializable{
 
     @SerializedName("id")
     @Expose

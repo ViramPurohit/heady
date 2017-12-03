@@ -7,7 +7,6 @@ import io.reactivex.disposables.CompositeDisposable
  */
 class ProductPresenter : ProductImpl.Presenter{
 
-    val subscription = CompositeDisposable()
 
     lateinit var view : ProductImpl.View
 
@@ -16,7 +15,7 @@ class ProductPresenter : ProductImpl.Presenter{
     }
 
     override fun unSubscribe() {
-        subscription.clear()
+
     }
 
     override fun attachView(view: ProductImpl.View) {

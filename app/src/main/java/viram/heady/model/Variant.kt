@@ -2,8 +2,9 @@ package viram.heady.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
-class Variant {
+class Variant : Serializable{
 
     @SerializedName("id")
     @Expose
@@ -13,7 +14,7 @@ class Variant {
     var color: String? = null
     @SerializedName("size")
     @Expose
-    var size: Any? = null
+    var size: Double? = null
     @SerializedName("price")
     @Expose
     var price: Int? = null
