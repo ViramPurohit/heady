@@ -5,7 +5,10 @@ import android.support.v7.app.AppCompatActivity
 import com.example.viram.heady_test.ui.category.CategoryFragment
 import viram.heady.inject.component.DaggerActivityComponent
 import viram.heady.inject.module.ActivityModule
+import viram.heady.ui.productdetails.ProductDetails
 import viram.heady.util.ActivityUtil
+import viram.heady.util.CheckInternet
+import viram.heady.util.PreferencesUtils
 
 class MainActivity : AppCompatActivity() {
 
@@ -13,8 +16,31 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         injectDependency()
-        ActivityUtil().addFragmentToActivity(supportFragmentManager,
-                CategoryFragment().newInstance(), R.id.frame, "CategoryFragment")
+
+        var checkInternet = CheckInternet()
+
+        val productDetails = ProductDetails()
+        val bundle = Bundle()
+
+
+        if(PreferencesUtils().getFromPreferences(this)!=null){
+            bundle.putBoolean("fromcache", true)
+
+            productDetails.setArguments(bundle)
+            ActivityUtil().addFragmentToActivity(supportFragmentManager,
+                    CategoryFragment().newInstance(), R.id.frame, "CategoryFragment")
+
+        }else{
+            if(checkInternet.isConnected(this)){
+                bundle.putBoolean("fromcache", false)
+
+                productDetails.setArguments(bundle)
+                ActivityUtil().addFragmentToActivity(supportFragmentManager,
+                        CategoryFragment().newInstance(), R.id.frame, "CategoryFragment")
+            }
+        }
+
+
     }
 
     private fun injectDependency() {
