@@ -103,7 +103,7 @@ class ProductDetails : Fragment(),ProductDetailsImpl.View {
 
 
 
-            mview.product_details_price.text = context.getString(R.string.Rs)+"0.0"
+//            mview.product_details_price.text = context.getString(R.string.Rs)+"0.0"
 
             /*Create Image based on Name*/
             val generator = ColorGenerator.MATERIAL
@@ -248,7 +248,10 @@ class ProductDetails : Fragment(),ProductDetailsImpl.View {
     override fun updateColors(variants: ArrayList<Variant>) {
 
         loadColor(variants)
-
+        /*Update Price */
+        if(variants.size > 0){
+            updateProduct(variants[0],false)
+        }
 
     }
     fun addColor(size: Double?) {

@@ -41,23 +41,23 @@ class ProductDetailsPresenter : ProductDetailsImpl.Presenter{
 
                 variantlist.addAll(map.values)
 
-                if(variantlist.size > 0){
-                    if(variants[0].size != null){
-                        view.showSize(true)
-                        view.updateSize(variantlist)
 
-                    }else{
-                        view.updateColors(variantlist)
-                        view.showSize(false)
-                    }
-                }
 
             } catch (e: Exception) {
 
                 view.showSize(false)
             }
 
+            if(variantlist.size > 0){
+                if(variants[0].size != null){
+                    view.showSize(true)
+                    view.updateSize(variantlist)
 
+                }else{
+                    view.updateColors(variantlist)
+                    view.showSize(false)
+                }
+            }
         }
         view.updateView()
     }
