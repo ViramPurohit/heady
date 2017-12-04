@@ -42,9 +42,6 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.0.1'
     kapt 'com.jakewharton:butterknife-compiler:8.0.1'
 
-    // Anko for SQLite
-    compile "org.jetbrains.anko:anko-sqlite:$anko_version"
-
     // RX
     compile "io.reactivex.rxjava2:rxjava:$rxjava2_version"
     compile "io.reactivex.rxjava2:rxandroid:$rxjava2_version"
@@ -54,9 +51,6 @@ dependencies {
     compile "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
     compile "com.squareup.retrofit2:converter-gson:$retrofit_version"
     compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
-
-    // Timber
-    compile 'com.jakewharton.timber:timber:4.5.1'
 
     // Dagger 2
     compile "com.google.dagger:dagger:$dagger_version"

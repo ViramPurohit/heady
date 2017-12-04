@@ -11,7 +11,7 @@ class CategoryImpl {
 
     interface Presenter : BaseCategory.Presenter<View>{
         fun loadCategoryAPI(context: Context)
-        fun loadCategoryDb(): CategoryResult
+        fun loadCategoryDb(context: Context)
     }
 
     interface View : BaseCategory.View{

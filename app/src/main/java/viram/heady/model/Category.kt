@@ -17,6 +17,6 @@ class Category : Serializable{
     var products: List<Product>? = null
     @SerializedName("child_categories")
     @Expose
-    var childCategories: List<Int>? = null
+    var childCategories: ArrayList<Int>? = null
 
 }

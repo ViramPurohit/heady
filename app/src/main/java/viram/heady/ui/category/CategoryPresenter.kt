@@ -82,9 +82,12 @@ class CategoryPresenter : CategoryImpl.Presenter{
 
     }
 
-    override fun loadCategoryDb() : CategoryResult {
+    override fun loadCategoryDb(context: Context) {
         var preferencesUtils = PreferencesUtils()
 
-        return preferencesUtils.getFromPreferences(context)
+        view.updateView(preferencesUtils.getFromPreferences(context)!!)
+
+        view.showProgress(false)
+
     }
 }

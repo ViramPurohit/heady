@@ -16,18 +16,32 @@ class PreferencesUtils {
         val prefsEditor = mPrefs.edit()
         val gson = Gson()
         val json = gson.toJson(myobject)
-        prefsEditor.putString("MyObject", json)
+        prefsEditor.putString("CategoryResult", json)
+        prefsEditor.putBoolean("isCache", true)
         prefsEditor.commit()
     }
 
-    fun getFromPreferences(context: Context) : CategoryResult {
+    fun getFromPreferences(context: Context) : CategoryResult? {
+        var categoryResult : CategoryResult ?= null
+
         val mPrefs = context.getSharedPreferences("heady_pref", Context.MODE_PRIVATE)
         val gson = Gson()
-        val json = mPrefs.getString("MyObject", "")
-        val obj = gson.fromJson<CategoryResult>(json, CategoryResult::class.java!!)
+        val json = mPrefs.getString("CategoryResult", null)
+        if(json != null){
+            categoryResult = gson.fromJson<CategoryResult>(json, CategoryResult::class.java!!) as? CategoryResult
 
-        return obj
+            return categoryResult!!
+        }else{
+            return null
+        }
+
     }
 
+    fun isRecordWithCache(context: Context) : Boolean? {
 
+        val mPrefs = context.getSharedPreferences("heady_pref", Context.MODE_PRIVATE)
+        val isCache = mPrefs.getBoolean("isCache", false)
+
+        return isCache
+    }
 }

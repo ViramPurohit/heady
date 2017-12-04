@@ -1,7 +1,6 @@
 package viram.heady
 
 import android.app.Application
-import timber.log.Timber
 import viram.heady.inject.component.ApplicationComponent
 import viram.heady.inject.component.DaggerApplicationComponent
 import viram.heady.inject.module.ApplicationModule

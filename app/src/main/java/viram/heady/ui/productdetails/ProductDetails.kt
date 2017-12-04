@@ -19,10 +19,8 @@ import viram.heady.model.Variant
 import javax.inject.Inject
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-
-
-
-
+import android.view.MenuItem
+import viram.heady.MainActivity
 
 
 /**
@@ -45,9 +43,12 @@ class ProductDetails : Fragment(),ProductDetailsImpl.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         val bundle = this.arguments
         if (bundle != null) {
             product = bundle.getSerializable("product") as Product
+
         }
 
         injectDepedency()
@@ -60,9 +61,24 @@ class ProductDetails : Fragment(),ProductDetailsImpl.View {
         // Inflate the layout for this fragment
         mview = inflater!!.inflate(R.layout.fragment_product_details, container, false)
 
+        /*Update title details*/
+        (activity as MainActivity).getSupportActionBar()!!.title = product.name
+        (activity as MainActivity).getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
+        setHasOptionsMenu(true);
+
         productdetailsPresenter.loadProductDetails()
 
         return mview
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.getItemId()) {
+            android.R.id.home -> {
+                activity.onBackPressed()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 
     fun injectDepedency(){
@@ -79,8 +95,8 @@ class ProductDetails : Fragment(),ProductDetailsImpl.View {
             if(product.variants!!.size > 0){
                 Log.e("TAG ", " updateView "+ product.variants!![0].price.toString());
 
-                mview.product_details_price.text = context.getString(R.string.Rs)+
-                        product.variants!![0].price.toString()
+//                mview.product_details_price.text = context.getString(R.string.Rs)+
+//                        product.variants!![0].price.toString()
 
                 addSize();
             }else{
@@ -115,29 +131,64 @@ class ProductDetails : Fragment(),ProductDetailsImpl.View {
             mLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             mview!!.recyclerview_size.setLayoutManager(mLayoutManager)
 
+            var sizeAdater : SizeAdapter
 
-            mview!!.recyclerview_size.adapter = SizeAdapter(context,product.variants!!,true,
+
+            /*Remove duplicate size from list*/
+            var variants = ArrayList<Variant>()
+
+            variants.addAll(product.variants!!)
+
+            var map = LinkedHashMap<Double,Variant>()
+            for (variant : Variant in variants!!){
+                map.put(variant.size!!,variant)
+            }
+            variants.clear()
+
+            variants.addAll(map.values)
+
+            sizeAdater = SizeAdapter(context,variants!!,
                     object  : SizeAdapter.OnItemClickListener{
                         override fun onItemClick(variant: Variant) {
                             Toast.makeText(activity," item "+variant.size, Toast.LENGTH_SHORT).show()
-                            if(product.variants!!.size > 0){
-                                updateProduct(variant)
+                            if(variants!!.size > 0){
+                                updateProduct(variant,true)
                             }
                         }
                     })
+
+            mview!!.recyclerview_size.adapter = sizeAdater
+
+            /*Update color with first position*/
+            if(variants.size > 0){
+                updateProduct(variants[0],true)
+            }
+            /**/
         }
     }
 
-    fun updateProduct(variant: Variant) {
-        mview.product_details_price.text = context.getString(R.string.Rs)+
-                variant.price.toString()
+    fun updateProduct(variant: Variant,isFromSize: Boolean) {
+        mview.product_details_price.text =
+                context.getString(R.string.Rs)+
+                variant.price.toString() +
+                " + ("+ product.tax!!.name +
+                       " "+ context.getString(R.string.Rs)+
+                ""+getPercentage(variant.price!!, product.tax!!.value!!) + ")"
         mview.size_label.text = "Size : "+variant.size.toString()
 
         mview.color_label.text = "Color : "+variant.color.toString()
 
-        addColor(variant.size);
+        if(isFromSize){
+            addColor(variant.size);
+        }
+
     }
 
+    fun getPercentage(price: Int, tax: Double): Double{
+        var percentage : Double
+        percentage = ((price * tax)/100)
+        return percentage
+    }
     fun addColor(size: Double?) {
         if (product.variants != null) {
             var arrayList = ArrayList<Variant>()
@@ -153,15 +204,15 @@ class ProductDetails : Fragment(),ProductDetailsImpl.View {
             mview!!.recyclerview_color.setLayoutManager(mLayoutManager)
 
 
-            mview!!.recyclerview_color.adapter = SizeAdapter(context,arrayList!!,false,
-                    object  : SizeAdapter.OnItemClickListener{
+            mview!!.recyclerview_color.adapter = ColorAdapter(context,arrayList!!,
+                    object  : ColorAdapter.OnItemClickListener{
                         override fun onItemClick(variant: Variant) {
-                            Toast.makeText(activity," item "+variant.size, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(activity," item "+variant.color, Toast.LENGTH_SHORT).show()
                             if(arrayList!!.size > 0){
-                                updateProduct(variant)
+                                updateProduct(variant,false)
                             }
                         }
                     })
         }
     }
-}// Required empty public constructor
+}

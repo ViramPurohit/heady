@@ -17,9 +17,9 @@ import viram.heady.model.Variant
 /**
  * Created by viram on 12/2/2017.
  */
-class SizeAdapter(val context: Context, private val mValues: List<Variant>,
-                  private val mListener: OnItemClickListener?) :
-        RecyclerView.Adapter<SizeAdapter.ViewHolder>() {
+class ColorAdapter(val context: Context, private val mValues: List<Variant>,
+                   private val mListener: OnItemClickListener?) :
+        RecyclerView.Adapter<ColorAdapter.ViewHolder>() {
 
     var selectPosition = 0
 
@@ -31,12 +31,13 @@ class SizeAdapter(val context: Context, private val mValues: List<Variant>,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.mItem = mValues[position]
-        holder.mView.size_name.text = ""+mValues[position].size
+        holder.mView.size_name.text = ""+mValues[position].color
+
         if(selectPosition == position) {
             holder.mView.setBackgroundColor(Color.parseColor("#000000"));
-        }else
+        }else {
             holder.mView.setBackgroundColor(Color.parseColor("#ffffff"));
-
+        }
 
         holder.mView.setOnClickListener {
             mListener?.onItemClick(holder.mItem!!)

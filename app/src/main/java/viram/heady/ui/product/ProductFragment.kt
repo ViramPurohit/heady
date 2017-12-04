@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_product.view.*
+import viram.heady.MainActivity
 import viram.heady.R
 import viram.heady.inject.component.DaggerProductComponent
 import viram.heady.inject.module.ProductModule
@@ -52,11 +54,28 @@ class ProductFragment : Fragment(),ProductImpl.View {
         // Inflate the layout for this fragment
         mView = inflater!!.inflate(R.layout.fragment_product, container, false)
 
+        /*Update title details*/
+        (activity as MainActivity).getSupportActionBar()!!.setTitle(category.name)
+        (activity as MainActivity).getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
+        setHasOptionsMenu(true);
+
+
         productPresenter.loadProduct()
 
         return mView
     }
 
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.getItemId()) {
+            android.R.id.home -> {
+
+                activity.onBackPressed()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
 
     override fun updateView() {
 
