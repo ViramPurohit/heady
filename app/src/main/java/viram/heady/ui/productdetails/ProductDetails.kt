@@ -66,7 +66,7 @@ class ProductDetails : Fragment(),ProductDetailsImpl.View {
         (activity as MainActivity).getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
         setHasOptionsMenu(true);
 
-        productdetailsPresenter.loadProductDetails()
+        productdetailsPresenter.loadProductDetails(context,product.variants)
 
         return mview
     }
@@ -92,17 +92,19 @@ class ProductDetails : Fragment(),ProductDetailsImpl.View {
 
         if(product != null){
 
-            if(product.variants!!.size > 0){
-                Log.e("TAG ", " updateView "+ product.variants!![0].price.toString());
+//            if(product.variants!!.size > 0){
+//                Log.e("TAG ", " updateView "+ product.variants!![0].price.toString());
+//
+////                addSize();
+//            }else{
+//
+////                mview.constraint_size.visibility = View.VISIBLE
+//            }
 
-//                mview.product_details_price.text = context.getString(R.string.Rs)+
-//                        product.variants!![0].price.toString()
 
-                addSize();
-            }else{
-                mview.product_details_price.text = context.getString(R.string.Rs)+"0.0"
-                mview.constraint_size.visibility = View.VISIBLE
-            }
+
+            mview.product_details_price.text = context.getString(R.string.Rs)+"0.0"
+
             /*Create Image based on Name*/
             val generator = ColorGenerator.MATERIAL
 
@@ -120,49 +122,63 @@ class ProductDetails : Fragment(),ProductDetailsImpl.View {
             mview.product_details_img_name.setImageDrawable(ic2)
 
             mview.product_details_name.text = product.name
+
+
         }
 
     }
 
     fun addSize(){
         if (product.variants != null) {
-            val mLayoutManager: RecyclerView.LayoutManager
-            // The number of Columns
-            mLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            mview!!.recyclerview_size.setLayoutManager(mLayoutManager)
+//            val mLayoutManager: RecyclerView.LayoutManager
+//            // The number of Columns
+//            mLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+//            mview!!.recyclerview_size.setLayoutManager(mLayoutManager)
+//
+//            var sizeAdater : SizeAdapter
+//
+//
+//            /*Remove duplicate size from list*/
+//            var variants = ArrayList<Variant>()
+//
+//            variants.addAll(product.variants!!)
+//
+//            try {
+//                var map = LinkedHashMap<Double,Variant>()
+//                for (variant : Variant in variants!!){
+//                    map.put(variant.size!!,variant)
+//                }
+//                variants.clear()
+//
+//                variants.addAll(map.values)
+//            } catch (e: Exception) {
+//
+//            }
+//            if(variants.size > 0){
+//                if(variants[0].size != null){
+//                    mview.card_size.visibility = View.VISIBLE
+//                    sizeAdater = SizeAdapter(context,variants!!,
+//                            object  : SizeAdapter.OnItemClickListener{
+//                                override fun onItemClick(variant: Variant) {
+//                                    Toast.makeText(activity," item "+variant.size, Toast.LENGTH_SHORT).show()
+//                                    if(variants!!.size > 0){
+//                                        updateProduct(variant,true)
+//                                    }
+//                                }
+//                            })
+//
+//                    mview!!.recyclerview_size.adapter = sizeAdater
+//                }else{
+//                    mview.card_size.visibility = View.GONE
+//                }
+//            }
 
-            var sizeAdater : SizeAdapter
 
-
-            /*Remove duplicate size from list*/
-            var variants = ArrayList<Variant>()
-
-            variants.addAll(product.variants!!)
-
-            var map = LinkedHashMap<Double,Variant>()
-            for (variant : Variant in variants!!){
-                map.put(variant.size!!,variant)
-            }
-            variants.clear()
-
-            variants.addAll(map.values)
-
-            sizeAdater = SizeAdapter(context,variants!!,
-                    object  : SizeAdapter.OnItemClickListener{
-                        override fun onItemClick(variant: Variant) {
-                            Toast.makeText(activity," item "+variant.size, Toast.LENGTH_SHORT).show()
-                            if(variants!!.size > 0){
-                                updateProduct(variant,true)
-                            }
-                        }
-                    })
-
-            mview!!.recyclerview_size.adapter = sizeAdater
 
             /*Update color with first position*/
-            if(variants.size > 0){
-                updateProduct(variants[0],true)
-            }
+//            if(variants.size > 0){
+//                updateProduct(variants[0],true)
+//            }
             /**/
         }
     }
@@ -178,6 +194,8 @@ class ProductDetails : Fragment(),ProductDetailsImpl.View {
 
         mview.color_label.text = "Color : "+variant.color.toString()
 
+
+        /*It's update color list based on size*/
         if(isFromSize){
             addColor(variant.size);
         }
@@ -189,6 +207,50 @@ class ProductDetails : Fragment(),ProductDetailsImpl.View {
         percentage = ((price * tax)/100)
         return percentage
     }
+
+    override fun showSize(isVisible: Boolean) {
+      if(isVisible){
+          mview.card_size.visibility = View.VISIBLE
+      }else{
+          mview.card_size.visibility = View.GONE
+      }
+    }
+
+    override fun updateSize(variants: ArrayList<Variant>) {
+
+        val mLayoutManager: RecyclerView.LayoutManager
+        // The number of Columns
+        mLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        mview!!.recyclerview_size.setLayoutManager(mLayoutManager)
+
+        var sizeAdater : SizeAdapter
+
+
+        sizeAdater = SizeAdapter(context,variants!!,
+                object  : SizeAdapter.OnItemClickListener{
+                    override fun onItemClick(variant: Variant) {
+                        Toast.makeText(activity," item "+variant.size, Toast.LENGTH_SHORT).show()
+                        if(variants!!.size > 0){
+                            updateProduct(variant,true)
+                        }
+                    }
+                })
+
+        mview!!.recyclerview_size.adapter = sizeAdater
+
+        /*Update Price and Color First time */
+        if(variants.size > 0){
+            updateProduct(variants[0],true)
+        }
+
+    }
+
+    override fun updateColors(variants: ArrayList<Variant>) {
+
+        loadColor(variants)
+
+
+    }
     fun addColor(size: Double?) {
         if (product.variants != null) {
             var arrayList = ArrayList<Variant>()
@@ -198,21 +260,25 @@ class ProductDetails : Fragment(),ProductDetailsImpl.View {
                     arrayList.add(variant)
                 }
             }
-            val mLayoutManager: RecyclerView.LayoutManager
-            // The number of Columns
-            mLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            mview!!.recyclerview_color.setLayoutManager(mLayoutManager)
 
-
-            mview!!.recyclerview_color.adapter = ColorAdapter(context,arrayList!!,
-                    object  : ColorAdapter.OnItemClickListener{
-                        override fun onItemClick(variant: Variant) {
-                            Toast.makeText(activity," item "+variant.color, Toast.LENGTH_SHORT).show()
-                            if(arrayList!!.size > 0){
-                                updateProduct(variant,false)
-                            }
-                        }
-                    })
+            loadColor(arrayList)
         }
+    }
+    fun loadColor(variants: ArrayList<Variant>){
+
+        val mLayoutManager: RecyclerView.LayoutManager
+        mLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        mview!!.recyclerview_color.setLayoutManager(mLayoutManager)
+
+
+        mview!!.recyclerview_color.adapter = ColorAdapter(context,variants!!,
+                object  : ColorAdapter.OnItemClickListener{
+                    override fun onItemClick(variant: Variant) {
+                        Toast.makeText(activity," item "+variant.color, Toast.LENGTH_SHORT).show()
+                        if(variants!!.size > 0){
+                            updateProduct(variant,false)
+                        }
+                    }
+                })
     }
 }
