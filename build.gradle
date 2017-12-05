@@ -35,3 +35,5 @@ ext.rxjava2_version = '2.0.1'
 ext.espresso_version = '2.2.2'
 ext.anko_version = '0.9.1'
 ext.support_version = '26.1.0'
+ext.archLifecycleVersion = "1.0.0"
+ext.archRoomVersion = "1.0.0"
