@@ -65,8 +65,8 @@ dependencies {
 
     compile "android.arch.lifecycle:extensions:$archLifecycleVersion"
     compile "android.arch.persistence.room:runtime:$archRoomVersion"
-    annotationProcessor "android.arch.lifecycle:compiler:$archLifecycleVersion"
-    annotationProcessor "android.arch.persistence.room:compiler:$archRoomVersion"
+    kapt "android.arch.lifecycle:compiler:$archLifecycleVersion"
+    kapt "android.arch.persistence.room:compiler:$archRoomVersion"
 
 
 }

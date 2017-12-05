@@ -2,4 +2,6 @@
     <string name="app_name">Heady</string>
     <string name="Rs">\u20B9</string>
     <string name="category">Category</string>
+    <string name="label_sort">SORT</string>
+    <string name="label_filter">Filter</string>
 </resources>

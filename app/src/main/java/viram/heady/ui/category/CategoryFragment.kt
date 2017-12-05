@@ -1,5 +1,7 @@
 package com.example.viram.heady_test.ui.category
 
+import android.arch.persistence.room.Room
+import android.arch.persistence.room.RoomDatabase
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
@@ -9,18 +11,20 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_category.view.*
 import viram.heady.MainActivity
 import viram.heady.R
+import viram.heady.db.AppDatabase
+import viram.heady.db.CategoryDao
 import viram.heady.inject.component.DaggerCategoryComponent
 import viram.heady.inject.module.CategoryModule
 import viram.heady.model.Category
 import viram.heady.model.CategoryResult
 import viram.heady.ui.category.CategoryImpl
 import viram.heady.ui.category.CategoryListAdapter
-import viram.heady.ui.subcategory.SubCategoryFragment
 import viram.heady.ui.product.ProductFragment
+import viram.heady.ui.subcategory.SubCategoryFragment
 import viram.heady.util.ActivityUtil
 import viram.heady.util.CheckInternet
 import viram.heady.util.PreferencesUtils
-import java.util.ArrayList
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -59,8 +63,7 @@ class CategoryFragment : Fragment(),CategoryImpl.View{
                               savedInstanceState: Bundle?): View? {
         /*Update title details*/
         (activity as MainActivity).getSupportActionBar()!!.setDisplayHomeAsUpEnabled(false)
-        (activity as MainActivity).getSupportActionBar()!!.setTitle(
-                context.getString(R.string.category))
+        (activity as MainActivity).getSupportActionBar()!!.title = context.getString(R.string.category)
 
         mview = inflater!!.inflate(R.layout.fragment_category, container, false)
 
@@ -94,13 +97,21 @@ class CategoryFragment : Fragment(),CategoryImpl.View{
         categoryComponent.inject(this)
     }
 
+    fun initDatabase() : AppDatabase {
+
+        var mDb = Room.databaseBuilder(context,
+                AppDatabase::class.java, "todo_database").build()
+
+        return mDb
+    }
 
     override fun updateView(categoryResult: CategoryResult?) {
-
 
         mview!!.recyclerview.setLayoutManager(GridLayoutManager(context, 2))
 
         if (categoryResult != null) {
+            categoryPresenter.addCategoryToDb(initDatabase().categoryDao(),categoryResult)
+
             mview!!.recyclerview.adapter = CategoryListAdapter(categoryResult.categories!!,
                     object  : CategoryListAdapter.OnItemClickListener{
                         override fun onItemClick(category: Category) {
@@ -108,7 +119,7 @@ class CategoryFragment : Fragment(),CategoryImpl.View{
                             if(category.childCategories!!.size > 0){
                                 callChildCategory(category,categoryResult.categories)
                             }else{
-                                callProductFragment(category)
+                                callProductFragment(category,categoryResult)
                             }
 
                         }
@@ -117,10 +128,11 @@ class CategoryFragment : Fragment(),CategoryImpl.View{
 
     }
 
-    fun callProductFragment(item: Category) {
+    fun callProductFragment(item: Category, categoryResult: CategoryResult?) {
         val productFragment = ProductFragment()
         val bundle = Bundle()
         bundle.putSerializable("category", item)
+        bundle.putSerializable("categoryResult", categoryResult)
         productFragment.setArguments(bundle)
         ActivityUtil().addFragmentToActivity(
                 fragmentManager,

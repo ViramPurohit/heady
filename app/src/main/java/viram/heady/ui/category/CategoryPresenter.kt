@@ -6,6 +6,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import viram.heady.api.ApiService
+import viram.heady.db.CategoryDao
+import viram.heady.model.Category
 import viram.heady.model.CategoryResult
 import viram.heady.ui.category.CategoryImpl
 import viram.heady.util.PreferencesUtils
@@ -14,13 +16,17 @@ import viram.heady.util.PreferencesUtils
 /**
  * Created by Viram Purohit on 12/1/2017.
  */
-class CategoryPresenter : CategoryImpl.Presenter{
+class CategoryPresenter  : CategoryImpl.Presenter{
+
 
     private val subscriptions = CompositeDisposable()
 
     lateinit var view : CategoryImpl.View
 
     lateinit var context : Context
+
+
+
     fun getCategoryList(observableCategory: Observable<CategoryResult>) {
 
        var subscribe = observableCategory.subscribeOn(Schedulers.io())
@@ -88,6 +94,14 @@ class CategoryPresenter : CategoryImpl.Presenter{
         view.updateView(preferencesUtils.getFromPreferences(context)!!)
 
         view.showProgress(false)
+
+    }
+
+    override fun addCategoryToDb(categoryDao: CategoryDao, categoryResult: CategoryResult?) {
+
+        for (category : Category in categoryResult!!.categories!!){
+            categoryDao.insertAll(category)
+        }
 
     }
 }

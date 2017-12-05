@@ -2,7 +2,6 @@ package viram.heady.util
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import viram.heady.model.Variant
 
 /**
  * Created by viram on 12/3/2017.
@@ -15,6 +14,7 @@ class ActivityUtil {
         transaction.replace(frameId, fragment, fragmentTag)
         /*BackStack not required because it's parent Fragment so on backpress app will closed*/
         transaction.commit()
+
     }
 
     fun addFragmentToActivity(fragmentManager: FragmentManager,

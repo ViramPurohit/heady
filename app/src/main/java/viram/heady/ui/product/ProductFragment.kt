@@ -2,12 +2,12 @@ package viram.heady.ui.product
 
 
 import android.os.Bundle
+import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.app.Fragment
+import android.support.v4.view.MenuItemCompat
 import android.support.v7.widget.GridLayoutManager
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.support.v7.widget.SearchView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_product.view.*
 import viram.heady.MainActivity
@@ -15,6 +15,7 @@ import viram.heady.R
 import viram.heady.inject.component.DaggerProductComponent
 import viram.heady.inject.module.ProductModule
 import viram.heady.model.Category
+import viram.heady.model.CategoryResult
 import viram.heady.model.Product
 import viram.heady.ui.productdetails.ProductDetails
 import viram.heady.util.ActivityUtil
@@ -24,7 +25,8 @@ import javax.inject.Inject
 /**
  * A simple [Fragment] subclass.
  */
-class ProductFragment : Fragment(),ProductImpl.View {
+class ProductFragment : Fragment(),ProductImpl.View ,SearchView.OnQueryTextListener{
+
 
 
     @Inject
@@ -33,6 +35,9 @@ class ProductFragment : Fragment(),ProductImpl.View {
     lateinit var mView : View
 
     lateinit var category : Category
+
+    lateinit var categoryResult: CategoryResult
+
     fun instance() : ProductFragment{
         return ProductFragment()
     }
@@ -46,8 +51,11 @@ class ProductFragment : Fragment(),ProductImpl.View {
         val bundle = this.arguments
         if (bundle != null) {
             category = bundle.getSerializable("category") as Category
+            categoryResult = bundle.getSerializable("categoryResult") as CategoryResult
         }
+
     }
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -59,8 +67,34 @@ class ProductFragment : Fragment(),ProductImpl.View {
         (activity as MainActivity).getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
         setHasOptionsMenu(true);
 
+//        val coordinatorLayout = mView.findViewById<View>(R.id.main_content) as CoordinatorLayout
+        val bottomsheet = mView.findViewById<View>(R.id.bottom_sheet)
+        var mBottomSheetBehavior = BottomSheetBehavior.from(bottomsheet);
+        mBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        mBottomSheetBehavior.setPeekHeight(0);
 
-        productPresenter.loadProduct()
+
+        mBottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    mBottomSheetBehavior.peekHeight = 0
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
+        mView.btn_sort.setOnClickListener(View.OnClickListener { view ->
+            if(mBottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED){
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            }else{
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+
+
+
+
+        })
+        productPresenter.loadProduct(categoryResult)
 
         return mView
     }
@@ -77,6 +111,54 @@ class ProductFragment : Fragment(),ProductImpl.View {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu!!.clear()
+
+        inflater!!.inflate(R.menu.menu_search,menu)
+        var item = menu.findItem(R.id.action_search) as MenuItem
+
+        val searchView = MenuItemCompat.getActionView(item) as SearchView
+
+        searchView.setOnQueryTextListener(this)
+
+
+        MenuItemCompat.setOnActionExpandListener(item,object : MenuItemCompat.OnActionExpandListener{
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                return true; // Return true to collapse action view
+            }
+
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+
+                return true; // Return true to expand action view
+            }
+
+
+        })
+//        var searchManger = activity.getSystemService(Context.SEARCH_SERVICE) as SearchManager;
+//        val searchView = SearchView((context as MainActivity).supportActionBar!!.themedContext)
+
+//        val searchView = menu.findItem(R.id.action_search).actionView as SearchView
+//        val searchView = item.actionView as SearchView
+//        searchView.setSearchableInfo(searchManger.getSearchableInfo(activity.componentName))
+//        searchView.setIconifiedByDefault(false)
+
+
+
+
+//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String): Boolean {
+//                return false
+//            }
+//
+//            override fun onQueryTextChange(newText: String): Boolean {
+//                return false
+//            }
+//        })
+
+
+
+    }
     override fun updateView() {
 
         mView!!.product_recyclerview.setLayoutManager(GridLayoutManager(context, 2))
@@ -119,4 +201,13 @@ class ProductFragment : Fragment(),ProductImpl.View {
                 productDetails, R.id.frame, "productDetails")
 
     }
-}// Required empty public constructor
+
+    override fun onQueryTextChange(p0: String?): Boolean {
+
+        return true;
+    }
+
+    override fun onQueryTextSubmit(p0: String?): Boolean {
+        return false;
+    }
+}

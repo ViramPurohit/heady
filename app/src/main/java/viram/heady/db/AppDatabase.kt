@@ -1,11 +1,13 @@
 package viram.heady.db
 
-import android.arch.persistence.db.SupportSQLiteOpenHelper
-import android.arch.persistence.room.*
-import android.content.Context
-import viram.heady.model.*
+import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
-
+import android.arch.persistence.room.RoomDatabase
+import android.arch.persistence.room.TypeConverters
+import android.content.Context
+import viram.heady.db.converter.Converters
+import viram.heady.model.*
+import viram.heady.util.Constants
 
 
 /**
@@ -13,31 +15,34 @@ import android.arch.persistence.room.Room
  */
 
 @Database(entities = arrayOf(
-        Category::class,Product::class,
+        Category::class/*,Product::class,
         Variant::class,Tax::class,
-        Ranking::class,Product_::class),version = 1)
-abstract class AppDatabase : RoomDatabase() {
+        Ranking::class,Product_::class*/),
+        version = 1,exportSchema = false)
+//@TypeConverters(Converters::class)
+abstract class AppDatabase (): RoomDatabase() {
 
 
-    private var INSTANCE: AppDatabase? = null
+    abstract fun categoryDao(): CategoryDao
+    private var sInstance: AppDatabase? = null
+    protected abstract fun injectMembers()
 
-    fun getDataBase(context: Context) : AppDatabase{
-
-        if(INSTANCE == null){
-            INSTANCE =
-                    Room.inMemoryDatabaseBuilder(context.applicationContext,AppDatabase::class.java)
-                            .allowMainThreadQueries()
-                            .build()
-
-
+    fun getAppData(context: Context): AppDatabase {
+        if (sInstance == null) {
+            sInstance = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java,
+                    Constants().DB_NAME)
+                    // allow queries on the main thread.
+                    // Don't do this on a real app! See PersistenceBasicSample for an example.
+                    //                            .allowMainThreadQueries()
+                    //                            .addMigrations(MIGRATION_1_2)
+                    .build()
         }
-        return INSTANCE as AppDatabase
+        return sInstance as AppDatabase
+
     }
 
-    fun destroyInstance(){
-        INSTANCE = null
+    fun destroyInstance() {
+        sInstance = null
     }
-
-
 
 }

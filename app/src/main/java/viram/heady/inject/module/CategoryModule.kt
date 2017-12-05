@@ -3,6 +3,9 @@ package viram.heady.inject.module
 import com.example.viram.heady_test.ui.category.CategoryPresenter
 import dagger.Module
 import dagger.Provides
+import viram.heady.db.AppDatabase
+import viram.heady.db.CategoryDao
+import viram.heady.inject.scope.PerApplication
 import viram.heady.ui.category.CategoryImpl
 
 /**
@@ -15,4 +18,5 @@ class CategoryModule {
     fun getCategoryPresenter(): CategoryImpl.Presenter{
         return CategoryPresenter()
     }
+
 }

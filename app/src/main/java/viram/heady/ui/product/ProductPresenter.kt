@@ -1,6 +1,6 @@
 package viram.heady.ui.product
 
-import io.reactivex.disposables.CompositeDisposable
+import viram.heady.model.CategoryResult
 
 /**
  * Created by viram on 12/3/2017.
@@ -22,7 +22,12 @@ class ProductPresenter : ProductImpl.Presenter{
         this.view = view
     }
 
-    override fun loadProduct() {
+    override fun loadProduct(categoryResult: CategoryResult) {
+
+        if(categoryResult.rankings!!.size > 0){
+
+
+        }
         view.updateView()
     }
 }
