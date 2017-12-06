@@ -237,6 +237,7 @@ class CategoryPresenter  : CategoryImpl.Presenter{
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe({ item ->
                     Log.e(" TAG ", "count--------"+ranking_name);
+                    rankingDao.insertAll(ranking_product!!)
 //                    if(count <= 1){
 //                        rankingDao.insertAll(ranking_product!!)
 //                    }else{
@@ -244,9 +245,10 @@ class CategoryPresenter  : CategoryImpl.Presenter{
 //                    }
 
                     for (product_ : Product_ in item!!){
-                        if(ranking_name.equals("Most Viewed Products")){
-                            rankingDao.insertAll(ranking_product!!)
-                        }else if(ranking_name.equals("Most OrdeRed Products")){
+                        if(ranking_name.equals("Most Viewed Products",true)){
+                            rankingDao.UpdateView_count(product_.id!!,
+                                    product_.viewCount!!)
+                        }else if(ranking_name.equals("Most OrdeRed Products",true)){
                             rankingDao.UpdateOrder_count(product_.id!!,
                                      product_.orderCount!!)
                         } else{
