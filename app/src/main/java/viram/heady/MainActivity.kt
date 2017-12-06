@@ -10,6 +10,7 @@ import viram.heady.db.AppDatabase
 import viram.heady.inject.component.DaggerActivityComponent
 import viram.heady.inject.module.ActivityModule
 import viram.heady.util.ActivityUtil
+import viram.heady.util.Constants
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -37,7 +38,7 @@ class MainActivity : AppCompatActivity() {
             val sd = Environment.getExternalStorageDirectory()
 
             if (sd.canWrite()) {
-                val currentDBPath = "/data/data/$packageName/databases/todo_database"
+                val currentDBPath = "/data/data/$packageName/databases/"+Constants().DB_NAME
                 val backupDBPath = "backupname.db"
                 val currentDB = File(currentDBPath)
                 val backupDB = File(sd, backupDBPath)

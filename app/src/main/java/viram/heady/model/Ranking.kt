@@ -1,18 +1,22 @@
 package viram.heady.model
 
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import org.jetbrains.annotations.NotNull
 
-@Entity
+@Entity(tableName = "ranking")
 class Ranking {
-    @PrimaryKey(autoGenerate = true)
-    var id : Integer ?= null
 
+    @PrimaryKey()
+    @NotNull
     @SerializedName("ranking")
     @Expose
-    var ranking: String? = null
+    var ranking: String = ""
+
+    @Ignore
     @SerializedName("products")
     @Expose
     var products: List<Product_>? = null

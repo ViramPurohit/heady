@@ -18,5 +18,5 @@ class AppModule (private val context: Context) {
     @Provides fun providesAppDatabase(context: Context): AppDatabase =
             Room.databaseBuilder(context, AppDatabase::class.java, "todo_database").build()
 
-    @Provides fun providesCategoryDao(database: AppDatabase) = database.categoryDao()
+
 }

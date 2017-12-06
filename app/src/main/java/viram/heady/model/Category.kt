@@ -23,6 +23,9 @@ class Category : Serializable{
     var name: String? = null
 
 
+    @ColumnInfo(name = "child_category")
+    var child_category: String? = ""
+
     @Ignore
     @SerializedName("products")
     @Expose
@@ -32,5 +35,7 @@ class Category : Serializable{
     @SerializedName("child_categories")
     @Expose
     var childCategories: ArrayList<Int>? = null
+
+
 
 }

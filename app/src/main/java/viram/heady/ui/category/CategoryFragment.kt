@@ -1,7 +1,6 @@
 package com.example.viram.heady_test.ui.category
 
 import android.arch.persistence.room.Room
-import android.arch.persistence.room.RoomDatabase
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
@@ -10,9 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_category.view.*
 import viram.heady.MainActivity
+import viram.heady.MainApplication
 import viram.heady.R
 import viram.heady.db.AppDatabase
-import viram.heady.db.CategoryDao
 import viram.heady.inject.component.DaggerCategoryComponent
 import viram.heady.inject.module.CategoryModule
 import viram.heady.model.Category
@@ -110,7 +109,7 @@ class CategoryFragment : Fragment(),CategoryImpl.View{
         mview!!.recyclerview.setLayoutManager(GridLayoutManager(context, 2))
 
         if (categoryResult != null) {
-            categoryPresenter.addCategoryToDb(initDatabase().categoryDao(),categoryResult)
+            categoryPresenter.addCategoryToDb(MainApplication.database,categoryResult)
 
             mview!!.recyclerview.adapter = CategoryListAdapter(categoryResult.categories!!,
                     object  : CategoryListAdapter.OnItemClickListener{

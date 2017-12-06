@@ -11,12 +11,16 @@ import viram.heady.ui.category.CategoryImpl
 /**
  * Created by viram on 12/3/2017.
  */
-@Module
+@Module()
 class CategoryModule {
 
     @Provides
     fun getCategoryPresenter(): CategoryImpl.Presenter{
         return CategoryPresenter()
     }
+
+
+//    @Provides
+//    fun providesCategoryDao(database: AppDatabase) = database.categoryDao()
 
 }

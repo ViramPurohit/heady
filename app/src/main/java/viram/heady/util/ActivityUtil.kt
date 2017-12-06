@@ -23,4 +23,26 @@ class ActivityUtil {
         transaction.replace(frameId, fragment, fragmentTag).addToBackStack(null)
         transaction.commit()
     }
+
+
+    fun convertStringArrayToString(strArr: ArrayList<Int>, delimiter: String): String {
+        val sb = StringBuilder()
+        if(strArr != null){
+            if(strArr.size > 0){
+                for (str : Int in strArr){
+                    sb.append(""+str).append(delimiter)
+                }
+                return sb.substring(0, sb.length - 1)
+            }else{
+                sb.append("")
+                return sb.toString()
+            }
+
+        }else{
+            sb.append("")
+            return sb.toString()
+        }
+
+
+    }
 }
