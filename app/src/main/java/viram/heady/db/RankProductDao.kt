@@ -55,16 +55,16 @@ interface RankProductDao {
 //    fun insertOrUpdateShare_count(id :Int,shares :Int);
 
 
-    @Query("SELECT * FROM ordered_products")
-    fun getAllOrdered(): List<Product_Ordered>
-
+//    @Query("SELECT * FROM ordered_products")
+//    fun getAllOrdered(): List<Product_Ordered>
 //
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllOrdered(product_Ordered: List<Product_Ordered>)
-//
-//
-    @Query("SELECT * FROM viewed_products")
-    fun getAllViewed(): List<Product_Viewed>
+////
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    fun insertAllOrdered(product_Ordered: List<Product_Ordered>)
+////
+////
+//    @Query("SELECT * FROM viewed_products")
+//    fun getAllViewed(): List<Product_Viewed>
 //
 //
 //    @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -3,6 +3,7 @@ package viram.heady.ui.category
 import android.content.Context
 import viram.heady.base.BaseCategory
 import viram.heady.db.AppDatabase
+import viram.heady.model.Category
 import viram.heady.model.CategoryResult
 
 /**
@@ -12,7 +13,7 @@ class CategoryImpl {
 
     interface Presenter : BaseCategory.Presenter<View>{
         fun loadCategoryAPI(context: Context)
-        fun loadCategoryDb(context: Context)
+        fun loadCategoryDb(context: Context,appDatabase: AppDatabase?)
         fun addCategoryToDb(categoryDao: AppDatabase?, categoryResult: CategoryResult?)
     }
 
@@ -21,5 +22,6 @@ class CategoryImpl {
         fun showError(error : String)
         fun showEmptyView(visible : Boolean)
         fun updateView(categoryResult: CategoryResult?)
+        fun updateView_DB(categoryResult: List<Category>)
     }
 }

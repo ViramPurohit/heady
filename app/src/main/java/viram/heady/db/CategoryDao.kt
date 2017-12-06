@@ -15,6 +15,10 @@ interface CategoryDao {
     @Query("SELECT * FROM category")
     fun getAll(): List<Category>
 
+
+    @Query("SELECT child_category FROM category WHERE id = :id")
+    fun getCategoryProduct(id : Int) : String
+
 //    @Insert(onConflict = OnConflictStrategy.REPLACE)
 //    fun insertAll(category: ArrayList<Category>)
 

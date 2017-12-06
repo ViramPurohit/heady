@@ -103,8 +103,9 @@ class SubCategoryFragment : Fragment(), SubCategoryImpl.View {
     fun callProductFragment(category: Category) {
         val productFragment = ProductFragment()
         val bundle = Bundle()
-        bundle.putSerializable("category", category)
-        bundle.putSerializable("categoryResult", categoryResult)
+        bundle.putInt("category", category.id!!)
+        bundle.putString("category_name", category.name!!)
+//        bundle.putSerializable("categoryResult", categoryResult)
         productFragment.setArguments(bundle)
         ActivityUtil().addFragmentToActivity(
                 fragmentManager,

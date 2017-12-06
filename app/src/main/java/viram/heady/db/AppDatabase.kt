@@ -17,9 +17,9 @@ import viram.heady.util.Constants
 @Database(entities = arrayOf(
         Category::class,Product::class,
         Variant::class,Tax::class,
-        Ranking::class,Product_::class,
+        Ranking::class,Product_::class/*,
         Product_Ordered::class,Product_Viewed::class,
-        Product_Shared::class),
+        Product_Shared::class*/),
         version = 1,exportSchema = false)
 //@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {

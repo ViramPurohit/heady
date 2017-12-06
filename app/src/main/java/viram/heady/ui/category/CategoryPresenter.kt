@@ -37,8 +37,8 @@ class CategoryPresenter  : CategoryImpl.Presenter{
                    try {
                        var categoryResult = categoryResults?.categories
                         if(categoryResult!!.size  > 0){
-                            var preferencesUtils = PreferencesUtils()
-                            preferencesUtils.saveToPreferences(context, categoryResults!!)
+//                            var preferencesUtils = PreferencesUtils()
+//                            preferencesUtils.saveToPreferences(context, categoryResults!!)
 
                            view.updateView(categoryResults)
                         }else{
@@ -90,12 +90,25 @@ class CategoryPresenter  : CategoryImpl.Presenter{
 
     }
 
-    override fun loadCategoryDb(context: Context) {
-        var preferencesUtils = PreferencesUtils()
+    override fun loadCategoryDb(context: Context,appDatabase: AppDatabase?) {
 
-        view.updateView(preferencesUtils.getFromPreferences(context)!!)
+        Observable.just(1)
+                .observeOn(Schedulers.io())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe({ item ->
 
-        view.showProgress(false)
+                    view.updateView_DB(appDatabase!!.categoryDao().getAll())
+
+                    view.showProgress(false)
+                }, {
+
+                    throwable -> throwable.printStackTrace()
+                    Log.e(" TAG ", " Error--------");
+                })
+
+
+
+
 
     }
 
@@ -125,8 +138,10 @@ class CategoryPresenter  : CategoryImpl.Presenter{
                         category.child_category = ""
                     }
                     categoryDao.insertAll(category)
-                    onInsertProduct(item.products as ArrayList<Product>, appDatabse,appDatabse!!.productDao())
+                    onInsertProduct(category.id,item.products as ArrayList<Product>,
+                            appDatabse,appDatabse!!.productDao())
                 }, {
+
 
                     throwable -> throwable.printStackTrace()
                     Log.e(" TAG ", " Error--------");
@@ -135,17 +150,26 @@ class CategoryPresenter  : CategoryImpl.Presenter{
 
     }
 
-    fun onInsertProduct(product: ArrayList<Product>, appDatabse: AppDatabase?,productDao: ProductDao)
+    fun onInsertProduct(id: Int?,product: ArrayList<Product>, appDatabse: AppDatabase?,productDao: ProductDao)
     {
         Observable.just(product)
                 .observeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe({ item ->
 
-                    productDao.insertAll(product)
+
 
                     /*Add add variant for same*/
                     for (product_ in item){
+
+                        var product : Product
+                        /*Update Category id*/
+                        product = product_
+                        product.c_id = id
+
+                        productDao.insertAll(product_)
+
+
                         var tax: Tax
                         tax = product_.tax!!
                         tax.p_id = product_.id

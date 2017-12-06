@@ -40,6 +40,7 @@ import javax.inject.Inject
 
 class CategoryFragment : Fragment(),CategoryImpl.View{
 
+
     @Inject
     lateinit var categoryPresenter : CategoryImpl.Presenter
 
@@ -70,7 +71,7 @@ class CategoryFragment : Fragment(),CategoryImpl.View{
         var checkInternet = CheckInternet()
 
         if(PreferencesUtils().isRecordWithCache(context)!!){
-            categoryPresenter.loadCategoryDb(context)
+            categoryPresenter.loadCategoryDb(context,MainApplication.database)
         }else{
             if(checkInternet.isConnected(context)){
                 categoryPresenter.loadCategoryAPI(context)
@@ -118,7 +119,7 @@ class CategoryFragment : Fragment(),CategoryImpl.View{
                             if(category.childCategories!!.size > 0){
                                 callChildCategory(category,categoryResult.categories)
                             }else{
-                                callProductFragment(category,categoryResult)
+                                callProductFragment(category)
                             }
 
                         }
@@ -127,11 +128,33 @@ class CategoryFragment : Fragment(),CategoryImpl.View{
 
     }
 
-    fun callProductFragment(item: Category, categoryResult: CategoryResult?) {
+    override fun updateView_DB(categoryResult: List<Category>) {
+
+        mview!!.recyclerview.setLayoutManager(GridLayoutManager(context, 2))
+
+        if (categoryResult != null) {
+
+            mview!!.recyclerview.adapter = CategoryListAdapter(categoryResult!!,
+                    object  : CategoryListAdapter.OnItemClickListener{
+                        override fun onItemClick(category: Category) {
+
+                            if(category.childCategories!!.size > 0){
+                                callChildCategory(category,categoryResult)
+                            }else{
+                                callProductFragment(category)
+                            }
+
+                        }
+                    })
+        }
+    }
+
+    fun callProductFragment(item: Category/*, categoryResult: CategoryResult?*/) {
         val productFragment = ProductFragment()
         val bundle = Bundle()
-        bundle.putSerializable("category", item)
-        bundle.putSerializable("categoryResult", categoryResult)
+        bundle.putInt("category_id", item.id!!)
+        bundle.putString("category_name", item.name!!)
+//        bundle.putSerializable("categoryResult", categoryResult)
         productFragment.setArguments(bundle)
         ActivityUtil().addFragmentToActivity(
                 fragmentManager,

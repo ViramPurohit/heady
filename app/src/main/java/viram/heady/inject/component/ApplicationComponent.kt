@@ -8,7 +8,7 @@ import viram.heady.inject.module.ApplicationModule
 /**
  * Created by viram on 12/3/2017.
  */
-@Component(modules = arrayOf(ApplicationModule::class, AppModule::class))
+@Component(modules = arrayOf(ApplicationModule::class))
 interface ApplicationComponent {
     fun inject(application: MainApplication)
 }

@@ -22,6 +22,9 @@ class Product : Serializable{
     @Expose
     var dateAdded: String? = null
 
+    @ColumnInfo(name = "c_id")
+    var c_id: Int? = null
+
     @Ignore
     @SerializedName("variants")
     @Expose

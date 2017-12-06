@@ -11,11 +11,10 @@ import android.support.v7.widget.SearchView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_product.view.*
 import viram.heady.MainActivity
+import viram.heady.MainApplication
 import viram.heady.R
 import viram.heady.inject.component.DaggerProductComponent
 import viram.heady.inject.module.ProductModule
-import viram.heady.model.Category
-import viram.heady.model.CategoryResult
 import viram.heady.model.Product
 import viram.heady.ui.productdetails.ProductDetails
 import viram.heady.util.ActivityUtil
@@ -34,9 +33,13 @@ class ProductFragment : Fragment(),ProductImpl.View ,SearchView.OnQueryTextListe
 
     lateinit var mView : View
 
-    lateinit var category : Category
+//    lateinit var category : Category
 
-    lateinit var categoryResult: CategoryResult
+//    lateinit var categoryResult: CategoryResult
+
+    var categor_id : Int = 0
+
+    lateinit var category_name : String
 
     fun instance() : ProductFragment{
         return ProductFragment()
@@ -50,8 +53,9 @@ class ProductFragment : Fragment(),ProductImpl.View ,SearchView.OnQueryTextListe
 
         val bundle = this.arguments
         if (bundle != null) {
-            category = bundle.getSerializable("category") as Category
-            categoryResult = bundle.getSerializable("categoryResult") as CategoryResult
+            categor_id = bundle.getInt("category_id",0)
+            category_name = bundle.getString("category_name")
+//            categoryResult = bundle.getSerializable("categoryResult") as CategoryResult
         }
 
     }
@@ -63,7 +67,7 @@ class ProductFragment : Fragment(),ProductImpl.View ,SearchView.OnQueryTextListe
         mView = inflater!!.inflate(R.layout.fragment_product, container, false)
 
         /*Update title details*/
-        (activity as MainActivity).getSupportActionBar()!!.setTitle(category.name)
+        (activity as MainActivity).getSupportActionBar()!!.setTitle(category_name)
         (activity as MainActivity).getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
         setHasOptionsMenu(true);
 
@@ -94,7 +98,10 @@ class ProductFragment : Fragment(),ProductImpl.View ,SearchView.OnQueryTextListe
 
 
         })
-        productPresenter.loadProduct(categoryResult)
+
+        mView!!.product_recyclerview.setLayoutManager(GridLayoutManager(context, 2))
+
+        productPresenter.loadProduct(MainApplication.database,categor_id)
 
         return mView
     }
@@ -135,36 +142,15 @@ class ProductFragment : Fragment(),ProductImpl.View ,SearchView.OnQueryTextListe
 
 
         })
-//        var searchManger = activity.getSystemService(Context.SEARCH_SERVICE) as SearchManager;
-//        val searchView = SearchView((context as MainActivity).supportActionBar!!.themedContext)
-
-//        val searchView = menu.findItem(R.id.action_search).actionView as SearchView
-//        val searchView = item.actionView as SearchView
-//        searchView.setSearchableInfo(searchManger.getSearchableInfo(activity.componentName))
-//        searchView.setIconifiedByDefault(false)
-
-
-
-
-//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String): Boolean {
-//                return false
-//            }
-//
-//            override fun onQueryTextChange(newText: String): Boolean {
-//                return false
-//            }
-//        })
-
 
 
     }
-    override fun updateView() {
+    override fun updateView(categoryProduct: List<Product>?) {
 
-        mView!!.product_recyclerview.setLayoutManager(GridLayoutManager(context, 2))
 
-        if (category != null) {
-            mView!!.product_recyclerview.adapter = ProductListAdapter(context,category.products!!,
+
+        if (categoryProduct != null) {
+            mView!!.product_recyclerview.adapter = ProductListAdapter(context,categoryProduct!!,
                     object  : ProductListAdapter.OnItemClickListener{
                         override fun onItemClick(item: Product) {
                             callFragment(item)

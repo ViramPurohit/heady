@@ -1,6 +1,11 @@
 package viram.heady.ui.product
 
-import viram.heady.model.CategoryResult
+import android.util.Log
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import viram.heady.db.AppDatabase
+import viram.heady.model.Product
 
 /**
  * Created by viram on 12/3/2017.
@@ -22,12 +27,21 @@ class ProductPresenter : ProductImpl.Presenter{
         this.view = view
     }
 
-    override fun loadProduct(categoryResult: CategoryResult) {
+    override fun loadProduct(appDatabase: AppDatabase?, categor_id: Int) {
 
-        if(categoryResult.rankings!!.size > 0){
+        Observable.just(1)
+                .observeOn(Schedulers.io())
+//                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe({ item ->
+                    var categoryProduct: List<Product> =  appDatabase!!.productDao().getCategoryProduct(categor_id)
 
+                    view.updateView(categoryProduct )
 
-        }
-        view.updateView()
+                }, {
+
+                    throwable -> throwable.printStackTrace()
+                    Log.e(" TAG ", "onInsertProduct Error--------");
+                })
+
     }
 }

@@ -10,6 +10,7 @@ import javax.inject.Singleton
 import viram.heady.MainApplication
 import viram.heady.db.AppDatabase
 import viram.heady.db.CategoryDao
+import viram.heady.util.Constants
 
 /**
  * Created by viram on 12/3/2017.
@@ -22,6 +23,16 @@ class ApplicationModule(private val mainApplication: MainApplication) {
     fun provideApplicationContext(): Application {
         return mainApplication
     }
+
+    @Provides
+    @Singleton
+    fun provideAppContext() : Context = mainApplication
+
+    @Provides
+    @Singleton
+    fun provideDatabase(context: Context)
+            = Room.databaseBuilder(context, AppDatabase::class.java, Constants().DB_NAME).build()
+
 
 //    @Provides
 //    fun database(context: Context): AppDatabase =

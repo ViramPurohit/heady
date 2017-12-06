@@ -1,7 +1,8 @@
 package viram.heady.ui.product
 
 import viram.heady.base.BaseCategory
-import viram.heady.model.CategoryResult
+import viram.heady.db.AppDatabase
+import viram.heady.model.Product
 
 /**
  * Created by viram on 12/3/2017.
@@ -9,11 +10,11 @@ import viram.heady.model.CategoryResult
 class ProductImpl {
 
     interface Presenter : BaseCategory.Presenter<View>{
-        fun loadProduct(categoryResult: CategoryResult)
+        fun loadProduct(categoryResult: AppDatabase?, categor_id: Int)
     }
 
     interface View : BaseCategory.View{
 
-        fun updateView()
+        fun updateView(categoryProduct: List<Product>?)
     }
 }
