@@ -394,9 +394,19 @@ class CategoryPresenter  : CategoryImpl.Presenter{
             override// this runs on another thread
             fun doInBackground(vararg params: Void): List<Product> {
 
-                product = appDatabase!!.productDao().getProductByName(product_name)
+                product = appDatabase!!.productDao().getProductByName("%"+product_name+"%")
 
-                return product!!
+                var categoryProduct = ArrayList<Product>()
+                for (product_ in this!!.product!!){
+                    product_.variants = appDatabase!!.variantDao().getVariant(product_.id!!)
+                    product_.tax = appDatabase!!.taxDao().getTax(product_.id!!)
+
+                    categoryProduct.add(product_)
+                }
+
+                return categoryProduct
+
+                return categoryProduct!!
             }
 
             override fun onPostExecute(result: List<Product>) {

@@ -56,7 +56,7 @@ interface ProductDao {
             "rank_products.shares in (select shares from rank_products) order by rank_products.shares")
     fun getProductByShares(): List<Product>
 
-    @Query("SELECT * FROM product WHERE name like :name")
+    @Query("SELECT * FROM product WHERE name LIKE :name")
     fun getProductByName(name: String) : List<Product>
 
 
