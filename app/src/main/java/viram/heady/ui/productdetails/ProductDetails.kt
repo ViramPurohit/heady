@@ -3,24 +3,22 @@ package viram.heady.ui.productdetails
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
 import kotlinx.android.synthetic.main.fragment_product_details.view.*
+import viram.heady.MainActivity
 import viram.heady.R
 import viram.heady.inject.component.DaggerProductDetailsComponent
 import viram.heady.inject.module.ProductDetailsModule
 import viram.heady.model.Product
 import viram.heady.model.Variant
 import javax.inject.Inject
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.view.MenuItem
-import viram.heady.MainActivity
 
 
 /**
@@ -64,12 +62,14 @@ class ProductDetails : Fragment(),ProductDetailsImpl.View {
         /*Update title details*/
         (activity as MainActivity).getSupportActionBar()!!.title = product.name
         (activity as MainActivity).getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
-
+        setHasOptionsMenu(true);
 
         productdetailsPresenter.loadProductDetails(context,product.variants)
 
         return mview
     }
+
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.getItemId()) {
@@ -162,7 +162,6 @@ class ProductDetails : Fragment(),ProductDetailsImpl.View {
         sizeAdater = SizeAdapter(context,variants!!,
                 object  : SizeAdapter.OnItemClickListener{
                     override fun onItemClick(variant: Variant) {
-//                        Toast.makeText(activity," item "+variant.size, Toast.LENGTH_SHORT).show()
                         if(variants!!.size > 0){
                             updateProduct(variant,true)
                         }
@@ -210,7 +209,6 @@ class ProductDetails : Fragment(),ProductDetailsImpl.View {
         mview!!.recyclerview_color.adapter = ColorAdapter(context,variants!!,
                 object  : ColorAdapter.OnItemClickListener{
                     override fun onItemClick(variant: Variant) {
-                        Toast.makeText(activity," item "+variant.color, Toast.LENGTH_SHORT).show()
                         if(variants!!.size > 0){
                             updateProduct(variant,false)
                         }
