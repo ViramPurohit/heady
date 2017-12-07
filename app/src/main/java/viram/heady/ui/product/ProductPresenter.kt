@@ -58,42 +58,6 @@ class ProductPresenter : ProductImpl.Presenter{
 
     }
 
-//    fun loadVariant(appDatabase: AppDatabase?, product_id: Int): List<Variant>? {
-//        var variant_list : List<Variant>
-//        Observable.just(1)
-//                .observeOn(Schedulers.io())
-////                .subscribeOn(AndroidSchedulers.mainThread())
-//                .subscribe({ item ->
-//                    variant_list = appDatabase!!.variantDao().getVariant(product_id)
-//
-//                }, {
-//
-//                    throwable ->
-//                    throwable.printStackTrace()
-//                    Log.e(" TAG ", "onInsertProduct Error--------");
-//                })
-//        return variant_list
-//
-//    }
-    fun loadTax(appDatabase: AppDatabase?, product_id: Int): Tax? {
 
-        Observable.just(1)
-                .observeOn(Schedulers.io())
-//                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe({ item ->
-                    var categoryProduct: List<Product> =  appDatabase!!.productDao().getCategoryProduct(product_id)
 
-                    for (product_ in categoryProduct){
-
-                    }
-                    view.updateView(categoryProduct )
-
-                }, {
-
-                    throwable -> throwable.printStackTrace()
-                    Log.e(" TAG ", "onInsertProduct Error--------");
-                })
-
-    return null
-    }
 }
