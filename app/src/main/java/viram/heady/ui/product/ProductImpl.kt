@@ -16,5 +16,6 @@ class ProductImpl {
     interface View : BaseCategory.View{
 
         fun updateView(categoryProduct: List<Product>?)
+        fun showProgress(boolean: Boolean)
     }
 }

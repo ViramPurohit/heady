@@ -29,6 +29,7 @@ class ProductPresenter : ProductImpl.Presenter{
     }
 
     override fun loadProduct(appDatabase: AppDatabase?, category_id: Int) {
+        view.showProgress(true)
         object : AsyncTask<Void, Void, List<Product>>() {
             override// this runs on another thread
             fun doInBackground(vararg params: Void): List<Product>? {
@@ -49,6 +50,7 @@ class ProductPresenter : ProductImpl.Presenter{
             override fun onPostExecute(result: List<Product>?) {
                 super.onPostExecute(result)
                 view.updateView(result)
+                view.showProgress(false)
             }
 
 

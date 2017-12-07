@@ -134,6 +134,14 @@ class ProductFragment : Fragment(),ProductImpl.View {
                 productDetails, R.id.frame, "productDetails")
 
     }
+    override fun showProgress(boolean: Boolean) {
 
+        if(boolean){
+            mView.progressBar.visibility = View.VISIBLE
+        }else{
+            mView.progressBar.visibility = View.GONE
+        }
+
+    }
 
 }
