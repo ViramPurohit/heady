@@ -6,9 +6,10 @@ import android.arch.persistence.room.PrimaryKey
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import org.jetbrains.annotations.NotNull
+import java.io.Serializable
 
 @Entity(tableName = "ranking")
-class Ranking {
+class Ranking : Serializable{
 
     @PrimaryKey()
     @NotNull

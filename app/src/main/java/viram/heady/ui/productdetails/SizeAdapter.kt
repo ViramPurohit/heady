@@ -33,9 +33,10 @@ class SizeAdapter(val context: Context, private val mValues: List<Variant>,
         holder.mItem = mValues[position]
         holder.mView.size_name.text = ""+mValues[position].size
         if(selectPosition == position) {
-            holder.mView.setBackgroundColor(Color.parseColor("#000000"));
-        }else
+            holder.mView.setBackgroundColor(Color.parseColor("#a1a1a1"));
+        }else {
             holder.mView.setBackgroundColor(Color.parseColor("#ffffff"));
+        }
 
 
         holder.mView.setOnClickListener {

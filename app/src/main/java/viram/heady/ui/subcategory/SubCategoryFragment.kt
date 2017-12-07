@@ -89,21 +89,49 @@ class SubCategoryFragment : Fragment(), SubCategoryImpl.View {
             mview!!.recyclerview_child_category.adapter = CategoryListAdapter(categorieslist!!,
                     object  : CategoryListAdapter.OnItemClickListener{
                         override fun onItemClick(category: Category) {
-                            if(category.childCategories!!.size > 0){
-                                callChildCategory(category,categoryResult)
+
+                            if(category.child_category != null){
+
+                                val ary = category.child_category!!.split(",".toRegex()).
+                                        dropLastWhile { it.isEmpty() }.toTypedArray()
+
+                                category.childCategories = convert(ary)
+
+
+                                if(category.childCategories!!.size > 0){
+                                    callChildCategory(category,categoryResult)
+                                }else{
+                                    callProductFragment(category)
+                                }
                             }else{
                                 callProductFragment(category)
                             }
+
+
+//                            if(category.childCategories!!.size > 0){
+//                                callChildCategory(category,categoryResult)
+//                            }else{
+//                                callProductFragment(category)
+//                            }
+//
 
                         }
                     })
         }
 
     }
+    private fun convert(p_id: Array<String>): ArrayList<Int> { //Note the [] after the String.
+        val number = ArrayList<Int>()
+        for (_id in p_id){
+            number.add(Integer.parseInt(_id))
+        }
+
+        return number
+    }
     fun callProductFragment(category: Category) {
         val productFragment = ProductFragment()
         val bundle = Bundle()
-        bundle.putInt("category", category.id!!)
+        bundle.putInt("category_id", category.id!!)
         bundle.putString("category_name", category.name!!)
 //        bundle.putSerializable("categoryResult", categoryResult)
         productFragment.setArguments(bundle)

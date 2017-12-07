@@ -34,7 +34,7 @@ class ColorAdapter(val context: Context, private val mValues: List<Variant>,
         holder.mView.size_name.text = ""+mValues[position].color
 
         if(selectPosition == position) {
-            holder.mView.setBackgroundColor(Color.parseColor("#000000"));
+            holder.mView.setBackgroundColor(Color.parseColor("#a1a1a1"));
         }else {
             holder.mView.setBackgroundColor(Color.parseColor("#ffffff"));
         }

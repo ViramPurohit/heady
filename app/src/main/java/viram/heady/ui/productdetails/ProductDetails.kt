@@ -64,7 +64,7 @@ class ProductDetails : Fragment(),ProductDetailsImpl.View {
         /*Update title details*/
         (activity as MainActivity).getSupportActionBar()!!.title = product.name
         (activity as MainActivity).getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
-        setHasOptionsMenu(true);
+
 
         productdetailsPresenter.loadProductDetails(context,product.variants)
 
@@ -92,19 +92,6 @@ class ProductDetails : Fragment(),ProductDetailsImpl.View {
 
         if(product != null){
 
-//            if(product.variants!!.size > 0){
-//                Log.e("TAG ", " updateView "+ product.variants!![0].price.toString());
-//
-////                addSize();
-//            }else{
-//
-////                mview.constraint_size.visibility = View.VISIBLE
-//            }
-
-
-
-//            mview.product_details_price.text = context.getString(R.string.Rs)+"0.0"
-
             /*Create Image based on Name*/
             val generator = ColorGenerator.MATERIAL
 
@@ -128,60 +115,6 @@ class ProductDetails : Fragment(),ProductDetailsImpl.View {
 
     }
 
-    fun addSize(){
-        if (product.variants != null) {
-//            val mLayoutManager: RecyclerView.LayoutManager
-//            // The number of Columns
-//            mLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-//            mview!!.recyclerview_size.setLayoutManager(mLayoutManager)
-//
-//            var sizeAdater : SizeAdapter
-//
-//
-//            /*Remove duplicate size from list*/
-//            var variants = ArrayList<Variant>()
-//
-//            variants.addAll(product.variants!!)
-//
-//            try {
-//                var map = LinkedHashMap<Double,Variant>()
-//                for (variant : Variant in variants!!){
-//                    map.put(variant.size!!,variant)
-//                }
-//                variants.clear()
-//
-//                variants.addAll(map.values)
-//            } catch (e: Exception) {
-//
-//            }
-//            if(variants.size > 0){
-//                if(variants[0].size != null){
-//                    mview.card_size.visibility = View.VISIBLE
-//                    sizeAdater = SizeAdapter(context,variants!!,
-//                            object  : SizeAdapter.OnItemClickListener{
-//                                override fun onItemClick(variant: Variant) {
-//                                    Toast.makeText(activity," item "+variant.size, Toast.LENGTH_SHORT).show()
-//                                    if(variants!!.size > 0){
-//                                        updateProduct(variant,true)
-//                                    }
-//                                }
-//                            })
-//
-//                    mview!!.recyclerview_size.adapter = sizeAdater
-//                }else{
-//                    mview.card_size.visibility = View.GONE
-//                }
-//            }
-
-
-
-            /*Update color with first position*/
-//            if(variants.size > 0){
-//                updateProduct(variants[0],true)
-//            }
-            /**/
-        }
-    }
 
     fun updateProduct(variant: Variant,isFromSize: Boolean) {
         mview.product_details_price.text =
@@ -229,7 +162,7 @@ class ProductDetails : Fragment(),ProductDetailsImpl.View {
         sizeAdater = SizeAdapter(context,variants!!,
                 object  : SizeAdapter.OnItemClickListener{
                     override fun onItemClick(variant: Variant) {
-                        Toast.makeText(activity," item "+variant.size, Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(activity," item "+variant.size, Toast.LENGTH_SHORT).show()
                         if(variants!!.size > 0){
                             updateProduct(variant,true)
                         }

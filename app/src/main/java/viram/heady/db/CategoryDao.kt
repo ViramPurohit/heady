@@ -17,8 +17,10 @@ interface CategoryDao {
 
 
     @Query("SELECT child_category FROM category WHERE id = :id")
-    fun getCategoryProduct(id : Int) : String
+    fun getChild_Category(id : Int) : String
 
+    @Query("SELECT count(*) FROM category")
+    fun getCategoryCount() : Int
 //    @Insert(onConflict = OnConflictStrategy.REPLACE)
 //    fun insertAll(category: ArrayList<Category>)
 

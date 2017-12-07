@@ -12,10 +12,9 @@ import viram.heady.model.Variant
 @Dao
 interface VariantDao {
 
-    @Query("SELECT * FROM variant")
-    fun getAll(): List<Variant>
-
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(variant: Variant)
+
+    @Query("SELECT * FROM variant WHERE p_id = :p_id")
+    fun getVariant(p_id: Int) : List<Variant>
 }

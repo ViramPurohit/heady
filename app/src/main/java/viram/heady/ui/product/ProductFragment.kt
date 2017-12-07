@@ -24,7 +24,7 @@ import javax.inject.Inject
 /**
  * A simple [Fragment] subclass.
  */
-class ProductFragment : Fragment(),ProductImpl.View ,SearchView.OnQueryTextListener{
+class ProductFragment : Fragment(),ProductImpl.View {
 
 
 
@@ -72,32 +72,7 @@ class ProductFragment : Fragment(),ProductImpl.View ,SearchView.OnQueryTextListe
         setHasOptionsMenu(true);
 
 //        val coordinatorLayout = mView.findViewById<View>(R.id.main_content) as CoordinatorLayout
-        val bottomsheet = mView.findViewById<View>(R.id.bottom_sheet)
-        var mBottomSheetBehavior = BottomSheetBehavior.from(bottomsheet);
-        mBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        mBottomSheetBehavior.setPeekHeight(0);
 
-
-        mBottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    mBottomSheetBehavior.peekHeight = 0
-                }
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-        })
-        mView.btn_sort.setOnClickListener(View.OnClickListener { view ->
-            if(mBottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED){
-                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            }else{
-                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            }
-
-
-
-
-        })
 
         mView!!.product_recyclerview.setLayoutManager(GridLayoutManager(context, 2))
 
@@ -118,36 +93,8 @@ class ProductFragment : Fragment(),ProductImpl.View ,SearchView.OnQueryTextListe
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
-        menu!!.clear()
 
-        inflater!!.inflate(R.menu.menu_search,menu)
-        var item = menu.findItem(R.id.action_search) as MenuItem
-
-        val searchView = MenuItemCompat.getActionView(item) as SearchView
-
-        searchView.setOnQueryTextListener(this)
-
-
-        MenuItemCompat.setOnActionExpandListener(item,object : MenuItemCompat.OnActionExpandListener{
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                return true; // Return true to collapse action view
-            }
-
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-
-                return true; // Return true to expand action view
-            }
-
-
-        })
-
-
-    }
     override fun updateView(categoryProduct: List<Product>?) {
-
-
 
         if (categoryProduct != null) {
             mView!!.product_recyclerview.adapter = ProductListAdapter(context,categoryProduct!!,
@@ -188,12 +135,5 @@ class ProductFragment : Fragment(),ProductImpl.View ,SearchView.OnQueryTextListe
 
     }
 
-    override fun onQueryTextChange(p0: String?): Boolean {
 
-        return true;
-    }
-
-    override fun onQueryTextSubmit(p0: String?): Boolean {
-        return false;
-    }
 }
